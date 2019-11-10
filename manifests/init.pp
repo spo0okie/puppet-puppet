@@ -1,15 +1,15 @@
 include stdlib
 class puppet {
-	case $::operatingsystem {
-		Debian: {
+	case "$::operatingsystem" {
+		'Debian': {
 			include repos::puppetlabs
 			package {'puppet': ensure => latest }
 		}
-		CentOS: {
+		'CentOS': {
 			include repos::puppetlabs
-			package {'puppet': ensure => latest }
+			package {'puppet-agent': ensure => latest }
 		}
-		OpenSuSE: {
+		'OpenSuSE': {
 			package {'ruby2.1-rubygem-puppet': ensure => latest }
 		}
 	} ->
