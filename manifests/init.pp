@@ -1,21 +1,20 @@
-include stdlib
+#include stdlib
 class puppet {
 	case $::operatingsystem {
-		Debian: {
+		'Debian': {
 			include repos::puppetlabs
 			package {'puppet': ensure => latest }
 		}
-		CentOS: {
+		'CentOS': {
 			include repos::puppetlabs
 			package {'puppet': ensure => latest }
 		}
-		OpenSuSE: {
+		'OpenSuSE': {
 			package {'ruby2.1-rubygem-puppet': ensure => latest }
 		}
 	} ->
 	file {'/var/log/puppet/':
 		ensure => 'directory',
-		owner => 'puppet',
 		mode => '0750'
 	} ->
 	file {'/etc/rsyslog.d/puppet.conf':
