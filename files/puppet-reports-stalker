@@ -1,0 +1,23 @@
+#! /bin/sh
+# puppet-reports-stalker
+# vagn scott, 21-jul-2011
+
+days="+7"       # more than 7 days old
+
+for d in `find /var/lib/puppet/reports -mindepth 1 -maxdepth 1 -type d`
+do
+         find $d -type f -name \*.yaml -mtime $days |
+         sort -r |
+         tail -n +2 |
+         xargs -n50 /bin/rm -f
+done
+
+for d in `find /opt/puppetlabs/server/data/puppetserver/reports -mindepth 1 -maxdepth 1 -type d`
+do
+         find $d -type f -name \*.yaml -mtime $days |
+         sort -r |
+         tail -n +2 |
+         xargs -n50 /bin/rm -f
+done
+
+exit 0

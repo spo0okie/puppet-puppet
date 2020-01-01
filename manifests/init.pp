@@ -7,7 +7,7 @@ class puppet {
 		}
 		'CentOS': {
 			include repos::puppetlabs
-			package {'puppet': ensure => latest }
+			package {'puppet-agent': ensure => latest }
 		}
 		'OpenSuSE': {
 			package {'ruby2.1-rubygem-puppet': ensure => latest }
