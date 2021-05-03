@@ -10,6 +10,6 @@ class puppet::clean_reports {
 		user	=>	"root",
 		hour	=>	21,
 		minute	=>	22,
-		weekday	=>	0,
+		weekday	=>	'*',
 	}
 }
