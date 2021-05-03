@@ -1,21 +1,29 @@
-include stdlib
-class puppet {
+class puppet (
+	$server=''
+) {
+	include repos::puppetlabs
+	
 	case "$::operatingsystem" {
-		'Debian': {
-			include repos::puppetlabs
-			package {'puppet': ensure => latest }
-		}
 		'CentOS': {
-			include repos::puppetlabs
-			package {'puppet-agent': ensure => latest }
+			$puppet_package='puppet-agent'
 		}
-		'OpenSuSE': {
-			package {'ruby2.1-rubygem-puppet': ensure => latest }
+		default: {
+			$puppet_package='puppet'
 		}
+	}
+	package {$puppet_package: 
+		ensure => 'latest'
+	} ->
+	ini_setting {"puppet_logdir":
+		ensure=>'present',
+		path=>'/etc/puppetlabs/puppet/puppet.conf',
+		section=>'main',
+		setting=>'logdir',
+		value=>'/var/log/puppet'
 	} ->
 	file {'/var/log/puppet/':
 		ensure => 'directory',
-		owner => 'puppet',
+		#owner => 'puppet',
 		mode => '0750'
 	} ->
 	file {'/etc/rsyslog.d/puppet.conf':
@@ -26,7 +34,15 @@ class puppet {
 	service {'puppet':
 		enable => true,
 		ensure => running,
-	} 
+	}
+	if $server!='' {
+		ini_setting {"puppet_server":
+			require=>Package[$puppet_package],
+			ensure=>'present',
+			path=>'/etc/puppetlabs/puppet/puppet.conf',
+			section=>'agent',
+			setting=>'server',
+			value=>$server
+		}
+	}
 }
-
-
